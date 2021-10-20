@@ -14,7 +14,7 @@ const objectForErrors = {
 // Validação para não criar um produto com um nome ja existente
 
 const validateNameExist = async (name) => {
-    const nameExist = await Product.getAll(name);
+    const nameExist = await Product.findName(name);
     if (nameExist) {
         objectForErrors.err.message = 'Product already exists';
         return objectForErrors; 
@@ -45,6 +45,18 @@ const ValidateNegativeQuantity = (quantity) => {
     }
 };
 
+// validaçao que não é possivel listar um produto que não existe
+
+const validateIdExist = async (id) => {
+    const productExist = await Product.findById(id);
+    if (!productExist) {
+        objectForErrors.err.message = 'Wrong id format';
+        return objectForErrors;
+    }
+};
+
+// cadastra um novo produto no banco de dados.
+
 const createNewProduct = async (name, quantity) => {
     const validProduct = await validateNameExist(name);
     if (validProduct) return validProduct;
@@ -59,4 +71,21 @@ const createNewProduct = async (name, quantity) => {
     return createProduct;
 };
 
-module.exports = { createNewProduct };
+// lista todos os prudutos.
+
+const listProducts = async () => {
+    const products = await Product.getAll();
+    return { products };
+};
+
+// lista apenas um produto por id passado.
+
+const listProductId = async (id) => {
+    const productId = await validateIdExist(id);
+    if (productId) return productId;
+
+    const product = await Product.findById(id);
+    return product;
+};
+
+module.exports = { createNewProduct, listProductId, listProducts };
