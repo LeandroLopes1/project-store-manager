@@ -88,4 +88,17 @@ const listProductId = async (id) => {
     return product;
 };
 
-module.exports = { createNewProduct, listProductId, listProducts };
+// atualiza produto 
+
+const updateProduct = async (id, name, quantity) => {
+    const validProductName = validateNameLength(name);
+    if (validProductName) return validProductName;
+
+    const validQuantity = ValidateNegativeQuantity(quantity);
+    if (validQuantity) return validQuantity;
+
+    const createProduct = await Product.update(id, name, quantity);
+    return createProduct;
+};
+
+module.exports = { createNewProduct, listProductId, listProducts, updateProduct };

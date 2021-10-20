@@ -28,4 +28,14 @@ const getProductId = async (req, res, _next) => {
     return res.status(200).json(productSelect);
 };
 
-module.exports = { createProduct, getAllProduct, getProductId };
+const updateProduct = async (req, res, _next) => {
+    const { id } = req.params;
+    const { name, quantity } = req.body;
+
+    const update = await Product.updateProduct(id, name, quantity);
+
+    if (update.err) return res.status(422).json(update);
+    return res.status(200).json(update);
+};
+
+module.exports = { createProduct, getAllProduct, getProductId, updateProduct };

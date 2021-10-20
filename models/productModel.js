@@ -9,11 +9,10 @@ const findName = async (name) => {
 };
 
 const findById = async (id) => {
-    const hexCharacters = 24;
-    if (id.length !== hexCharacters) return null;
+    if (!ObjectId.isValid(id)) return null;
 
     const productId = await connection()
-    .then((db) => db.collection('products').findOne({ _id: new ObjectId(id) }));
+    .then((db) => db.collection('products').findOne({ _id: ObjectId(id) }));
     return productId;
 };
 
@@ -29,4 +28,10 @@ const create = async (name, quantity) => {
     return productCreate.ops[0];
 };
 
-module.exports = { create, findName, getAll, findById };
+const update = async (id, name, quantity) => {
+    await connection().then((db) => db.collection('products').updateOne({ _id: ObjectId(id) }, 
+    { $set: { name, quantity } }));
+     return { id, name, quantity };
+};
+
+module.exports = { create, findName, getAll, findById, update };

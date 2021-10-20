@@ -9,4 +9,6 @@ productRoute.get('/', productController.getAllProduct);
 
 productRoute.get('/:id', productController.getProductId);
 
+productRoute.put('/:id', productController.updateProduct);
+
 module.exports = productRoute;
