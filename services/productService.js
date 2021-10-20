@@ -101,4 +101,12 @@ const updateProduct = async (id, name, quantity) => {
     return createProduct;
 };
 
-module.exports = { createNewProduct, listProductId, listProducts, updateProduct };
+const deleteProduct = async (id) => {
+    const takeproduct = await listProductId(id);
+    if (takeproduct.err) return takeproduct;
+
+    const product = await Product.exclude(id);
+    return product && takeproduct;
+};
+
+module.exports = { createNewProduct, listProductId, listProducts, updateProduct, deleteProduct };
