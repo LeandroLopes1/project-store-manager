@@ -13,6 +13,12 @@ const objectForErrors2 = {
     message: '',
     },
 }; 
+const objectForErrors3 = {
+    err: {
+    code: 'invalid_data',
+    message: 'Wrong sale ID format',
+  },
+};  
 
 const validateIdExist = async (id) => {
     const productExist = await Sale.findById(id);
@@ -65,4 +71,13 @@ const updateSale = async (id, product) => {
     const createSale = await Sale.update(id, product);
     return createSale;
 };
-module.exports = { createNewSale, listsale, listSaleId, updateSale };
+
+const deleteSale = async (id) => {
+    const takeSale = await listSaleId(id);
+    if (takeSale.err) return objectForErrors3;
+
+    const sale = await Sale.exclude(id);
+    return sale && takeSale;
+};
+
+module.exports = { createNewSale, listsale, listSaleId, updateSale, deleteSale };
