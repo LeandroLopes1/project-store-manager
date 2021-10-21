@@ -58,4 +58,11 @@ const listSaleId = async (id) => {
     return sale;
 };
 
-module.exports = { createNewSale, listsale, listSaleId };
+const updateSale = async (id, product) => {
+    const validSale = validateQuantity(product);
+    if (validSale) return validSale;
+
+    const createSale = await Sale.update(id, product);
+    return createSale;
+};
+module.exports = { createNewSale, listsale, listSaleId, updateSale };
