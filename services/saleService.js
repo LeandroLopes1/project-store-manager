@@ -7,20 +7,35 @@ const objectForErrors = {
     },
   };
 
-  const ValidateNegativeQuantity = (quantity) => {
+const objectForErrors2 = {
+    err: {
+    code: 'not_found',
+    message: '',
+    },
+}; 
+
+const validateIdExist = async (id) => {
+    const productExist = await Sale.findById(id);
+    if (!productExist) {
+        objectForErrors2.err.message = 'Sale not found';
+        return objectForErrors2;
+    }
+};
+
+const ValidateNegativeQuantity = (quantity) => {
     const minimal = 1;
     if (quantity < minimal) return true;
-  
+
     if (typeof quantity !== 'number') return true;
-  };
+};
   
-  const validateQuantity = (products) => {
+const validateQuantity = (products) => {
     const quantity = products.some((product) => ValidateNegativeQuantity(product.quantity));
     if (quantity) {
-      objectForErrors.err.message = 'Wrong product ID or invalid quantity';
-      return objectForErrors;
+    objectForErrors.err.message = 'Wrong product ID or invalid quantity';
+    return objectForErrors;
     }
-  };
+};
 
 const createNewSale = async (products) => {
     const sale = validateQuantity(products);
@@ -31,8 +46,16 @@ const createNewSale = async (products) => {
 };
 
 const listsale = async () => {
-    const sale = await Sale.getAll();
-    return { sale };
-}; 
+    const sales = await Sale.getAll();
+    return { sales };
+};
 
-module.exports = { createNewSale, listsale };
+const listSaleId = async (id) => {
+    const saleId = await validateIdExist(id);
+    if (saleId) return saleId;
+
+    const sale = await Sale.findById(id);
+    return sale;
+};
+
+module.exports = { createNewSale, listsale, listSaleId };
